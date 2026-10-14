@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CinePass – Sign In / Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    body {
+      background: radial-gradient(circle at top right, rgba(225, 29, 72, 0.08), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(2, 132, 199, 0.08), transparent 45%),
+                  #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-page-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .auth-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 1px rgba(15, 23, 42, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), #fb7185, #0284c7);
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .auth-brand .brand-logo {
+      font-size: 2.2rem;
+      display: inline-block;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 2px 8px var(--primary-glow));
+    }
+
+    .auth-brand h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+
+    .auth-brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .alert-banner {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      margin-bottom: 1.4rem;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .alert-banner.error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      display: block;
+    }
+
+    .alert-banner.success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      display: block;
+    }
+
+    .notice-box {
+      background: #f0f9ff;
+      border-left: 3px solid #0284c7;
+      border-top: 1px solid #e0f2fe;
+      border-right: 1px solid #e0f2fe;
+      border-bottom: 1px solid #e0f2fe;
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin-bottom: 1.4rem;
+      font-size: 0.84rem;
+      color: #0369a1;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal Brand Header -->
+  <header style="padding: 18px 2rem; display: flex; align-items: center; justify-content: space-between; background: #ffffff; border-bottom: 1px solid var(--border-color);">
+    <div class="nav-brand" style="cursor: default;">
+      <span class="brand-icon">🎬</span>
+      <span>Cine<span class="brand-highlight">Pass</span></span>
+    </div>
+    <span style="font-size: 0.85rem; color: var(--text-dim);">Secure Movie Ticketing Portal</span>
+  </header>
+
+  <!-- Auth Card Container -->
+  <div class="auth-page-container">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-logo">🎬</div>
+        <h1>Welcome to CinePass</h1>
+        <p>Please log in or create an account to access movies and book tickets</p>
+      </div>
+
+      <!-- Alert Box -->
+      <div id="alertBanner" class="alert-banner"></div>
+
+      <!-- Tab Switcher -->
+      <div class="auth-tabs" style="margin-bottom: 1.5rem;">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Register New Account</button>
+      </div>
+
+      <!-- 1. LOGIN FORM -->
+      <form id="loginForm" onsubmit="submitLogin(event)" autocomplete="off">
+        <div class="notice-box">
+          🔔 <strong>Login Notification:</strong> After successful sign-in, an automated login success notification will be sent to your original registered email address.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email address" required autocomplete="off" value="" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required autocomplete="off" value="" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.8rem;" id="loginSubmitBtn">
+          Sign In & Access Movies →
+        </button>
+      </form>
+
+      <!-- 2. REGISTER FORM -->
+      <form id="registerForm" onsubmit="submitRegister(event)" style="display: none;" autocomplete="off">
+        <div class="notice-box">
+          ✨ Register your account. After registration, you will be redirected to the Login page to sign in with your credentials.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name</label>
+          <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required minlength="2" autocomplete="off" value="" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Email Address</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="Enter your email address" required autocomplete="off" value="" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regPhone">Mobile Number</label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="10-digit mobile number" required pattern="[0-9]{10,12}" autocomplete="off" value="" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password</label>
+          <input type="password" id="regPassword" class="form-control" placeholder="Create a password (min 6 characters)" required minlength="6" autocomplete="off" value="" />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 0.8rem;" id="regSubmitBtn">
+          Register Account →
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="padding: 1.5rem; text-align: center; color: var(--text-dim); font-size: 0.82rem; background: #ffffff; border-top: 1px solid var(--border-color);">
+    &copy; 2026 CinePass Entertainment Inc. All rights reserved.
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // Ensure all inputs are empty when Login page loads (Requirement 4)
+    document.addEventListener('DOMContentLoaded', () => {
+      clearFormFields();
+    });
+
+    function clearFormFields() {
+      const emailField = document.getElementById('loginEmail');
+      const passField = document.getElementById('loginPassword');
+      if (emailField) emailField.value = '';
+      if (passField) passField.value = '';
+
+      const regName = document.getElementById('regName');
+      const regEmail = document.getElementById('regEmail');
+      const regPhone = document.getElementById('regPhone');
+      const regPassword = document.getElementById('regPassword');
+      if (regName) regName.value = '';
+      if (regEmail) regEmail.value = '';
+      if (regPhone) regPhone.value = '';
+      if (regPassword) regPassword.value = '';
+    }
+
+    function switchTab(tab) {
+      const loginTab = document.getElementById('tabLogin');
+      const regTab = document.getElementById('tabRegister');
+      const loginForm = document.getElementById('loginForm');
+      const regForm = document.getElementById('registerForm');
+      hideAlert();
+
+      if (tab === 'login') {
+        loginTab.classList.add('active');
+        regTab.classList.remove('active');
+        loginForm.style.display = 'block';
+        regForm.style.display = 'none';
+      } else {
+        regTab.classList.add('active');
+        loginTab.classList.remove('active');
+        regForm.style.display = 'block';
+        loginForm.style.display = 'none';
+      }
+    }
+
+    // Submit Login (Requirement 2)
+    async function submitLogin(e) {
+      e.preventDefault();
+      hideAlert();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginSubmitBtn');
+
+      if (!email || !password) {
+        showAlert('Please enter both your email address and password.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showAlert('Login successful! Redirecting to Home Page...', 'success');
+          showToast('Login successful! Login notification sent to ' + email, 'success');
+          setTimeout(() => {
+            window.location.href = '/home.html';
+          }, 600);
+        } else {
+          btn.disabled = false;
+          btn.innerText = 'Sign In & Access Movies →';
+          showAlert(data.message || 'Invalid email or password. Please try again.', 'error');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerText = 'Sign In & Access Movies →';
+        showAlert('Could not connect to server. Please try again.', 'error');
+      }
+    }
+
+    // Submit Registration (Requirement 1: Redirects to Login page instead of Home page)
+    async function submitRegister(e) {
+      e.preventDefault();
+      hideAlert();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const btn = document.getElementById('regSubmitBtn');
+
+      btn.disabled = true;
+      btn.innerText = 'Registering account...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          // Reset register button
+          btn.disabled = false;
+          btn.innerText = 'Register Account →';
+
+          // Clear registration form
+          document.getElementById('registerForm').reset();
+
+          // Requirement 1: Redirect user to the Login page/tab instead of the Home page!
+          switchTab('login');
+
+          // Ensure password field is completely empty
+          document.getElementById('loginPassword').value = '';
+          // Leave email empty as well per requirement 4
+          document.getElementById('loginEmail').value = '';
+
+          showAlert('✅ Registration successful! Please log in with your email and password to continue.', 'success');
+          showToast('Registration successful! Please sign in.', 'success');
+        } else {
+          btn.disabled = false;
+          btn.innerText = 'Register Account →';
+          showAlert(data.message || 'Registration failed. Email may already be in use.', 'error');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerText = 'Register Account →';
+        showAlert('Could not connect to server. Please try again.', 'error');
+      }
+    }
+
+    function showAlert(msg, type) {
+      const el = document.getElementById('alertBanner');
+      el.className = `alert-banner ${type}`;
+      el.innerText = msg;
+      el.style.display = 'block';
+    }
+
+    function hideAlert() {
+      const el = document.getElementById('alertBanner');
+      el.style.display = 'none';
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      let icon = type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️');
+      toast.innerHTML = `<span>${icon}</span> <div>${message}</div>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

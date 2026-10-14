@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CinePass – Online Movie Ticket Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+      <span class="brand-icon">🎬</span>
+      <span>Cine<span class="brand-highlight">Pass</span></span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#recommendedSection" class="nav-link">Recommended</a>
+      <a href="#nowShowingSection" class="nav-link">Movies</a>
+      <a href="#aboutTheatres" class="nav-link">Theatres</a>
+    </nav>
+
+    <div class="nav-auth" id="authNav">
+      <!-- Injected dynamically via JS: Login / Register OR User profile -->
+    </div>
+  </header>
+
+  <!-- Hero Banner (Top Recommended Movie) -->
+  <section class="hero-section" id="heroSection">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-tag">🔥 Featured Movie</div>
+      <h1 class="hero-title" id="heroTitle">Dune: Part Two</h1>
+      <div class="hero-meta">
+        <span class="rating-badge" id="heroRating">⭐ 8.8 / 10</span>
+        <span id="heroDuration">⏱️ 2h 46m</span>
+        <span id="heroGenre">Sci-Fi, Action, Adventure</span>
+      </div>
+      <p class="hero-desc" id="heroDesc">
+        Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" id="heroBookBtn">🎟️ Book Tickets</button>
+        <button class="btn btn-secondary btn-lg" id="heroDetailsBtn">ℹ️ Movie Details</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- 1. Recommended Movies Section (Requirement 2) -->
+    <section id="recommendedSection" style="margin-bottom: 3.5rem;">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span class="section-title-icon">🌟</span> Recommended Movies
+          </h2>
+          <p class="section-subtitle">Specially curated blockbusters handpicked for you</p>
+        </div>
+      </div>
+      <div class="movies-grid" id="recommendedGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- 2. Search & Filter Bar -->
+    <section id="nowShowingSection">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span class="section-title-icon">🎬</span> Now Showing in Theatres
+          </h2>
+          <p class="section-subtitle">Explore all available movies and reserve your preferred seats</p>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="movieSearchInput" class="search-input" placeholder="Search by title, genre, or language..." />
+        </div>
+        <div class="genre-tags">
+          <button class="genre-chip active" data-genre="ALL">All Movies</button>
+          <button class="genre-chip" data-genre="Action">Action</button>
+          <button class="genre-chip" data-genre="Sci-Fi">Sci-Fi</button>
+          <button class="genre-chip" data-genre="Drama">Drama</button>
+          <button class="genre-chip" data-genre="Adventure">Adventure</button>
+          <button class="genre-chip" data-genre="Comedy">Comedy</button>
+          <button class="genre-chip" data-genre="Animation">Animation</button>
+        </div>
+      </div>
+
+      <!-- All Movies Grid -->
+      <div class="movies-grid" id="allMoviesGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- 3. Theatres Showcase Section -->
+    <section id="aboutTheatres" style="margin-top: 2rem; margin-bottom: 4rem;">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">
+            <span class="section-title-icon">🏛️</span> Partner Cinemas & Experiences
+          </h2>
+          <p class="section-subtitle">World-class acoustic projection, 4K laser visuals, and luxury recliners</p>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <div class="theatre-card">
+          <h3 style="color: var(--text-main); margin-bottom: 6px;">PVR: Forum South Mall</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">📍 Kanakapura Road, Bengaluru</p>
+          <div class="theatre-amenities" style="margin-top: 10px;">✨ 4K RGB Laser • Dolby Atmos 7.1 • Recliner Seats</div>
+        </div>
+        <div class="theatre-card">
+          <h3 style="color: var(--text-main); margin-bottom: 6px;">INOX: Phoenix Marketcity</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">📍 Whitefield Main Road, Bengaluru</p>
+          <div class="theatre-amenities" style="margin-top: 10px;">✨ IMAX with Laser • Gourmet Dining • Dolby Atmos</div>
+        </div>
+        <div class="theatre-card">
+          <h3 style="color: var(--text-main); margin-bottom: 6px;">Cinepolis: Nexus Mall</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">📍 Koramangala 7th Block, Bengaluru</p>
+          <div class="theatre-amenities" style="margin-top: 10px;">✨ VIP Luxury Lounge • Macro XE • 4DX Motion</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-brand">🎬 CinePass</div>
+      <p style="margin-bottom: 12px; color: var(--text-muted);">
+        The premier platform for booking movie tickets with live seat availability, instant payment confirmation, and email e-tickets.
+      </p>
+      <p style="font-size: 0.8rem; color: var(--text-dim);">
+        &copy; 2026 CinePass Entertainment Inc. All rights reserved. Built with Java, Spring Boot, MySQL, HTML, CSS & JavaScript.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MODALS
+       ======================================================================== -->
+
+  <!-- 1. Authentication Modal (Register / Login) - Requirement 1 -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="authModalTitle">Welcome to CinePass</h3>
+        <button class="modal-close" onclick="closeModal('authModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+          <button class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Register New Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required />
+          </div>
+          <div style="background: #f0f9ff; border-left: 3px solid var(--accent-cyan); border-top: 1px solid #e0f2fe; border-right: 1px solid #e0f2fe; border-bottom: 1px solid #e0f2fe; padding: 10px 12px; border-radius: 4px; margin-bottom: 1.2rem; font-size: 0.82rem; color: #0369a1;">
+            🔔 A login notification email will be sent to your registered address upon successful login.
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="regName">Full Name</label>
+            <input type="text" id="regName" class="form-control" placeholder="Enter your full name" required minlength="2" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Email Address</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPhone">Mobile Number</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="10-digit mobile number" required pattern="[0-9]{10,12}" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="At least 6 characters" required minlength="6" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Movie Details Modal - Requirement 3 -->
+  <div class="modal-overlay" id="movieDetailsModal">
+    <div class="modal-container movie-details-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Movie Overview</h3>
+        <button class="modal-close" onclick="closeModal('movieDetailsModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="movieDetailsBody">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Theatre & Show Selection Modal (Calendar at top, Theatres, Timings, & Seats) - Requirement 4 & 5 -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-container booking-modal">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="bookingModalMovieTitle">Movie Name</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem;" id="bookingModalSubtitle">Details</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Step A: Theatre & Show Timing Selection (Requirement 4) -->
+        <div id="theatreShowSection">
+          <!-- Calendar Date Selector Bar at Top (Requirement 4) -->
+          <div style="margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+            📅 Select Show Date:
+          </div>
+          <div class="date-selector-bar" id="dateSelectorBar">
+            <!-- Dynamic 7-day date chips injected via JS -->
+          </div>
+
+          <div style="margin: 1.2rem 0 0.8rem; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
+            🏛️ Available Theatres & Timings:
+          </div>
+          <div class="theatres-container" id="theatresContainer">
+            <!-- Dynamic theatres & show timings injected via JS -->
+          </div>
+        </div>
+
+        <!-- Step B: Interactive Seating Layout (Requirement 5) -->
+        <div id="seatLayoutSection" style="display: none;">
+          <div id="seatLayoutHeader"></div>
+
+          <!-- Screen Graphic -->
+          <div class="screen-container">
+            <div class="cinema-screen"></div>
+            <span class="screen-label">All eyes this way please • Screen</span>
+          </div>
+
+          <!-- Category Legend (Requirement 5) -->
+          <div class="category-legend">
+            <div class="legend-item">
+              <div class="legend-box available"></div>
+              <span>Available</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box premium"></div>
+              <span>Premium (<strong id="premiumPriceLabel">₹280</strong>)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box elite"></div>
+              <span>Elite (<strong id="elitePriceLabel">₹180</strong>)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box selected"></div>
+              <span>Selected</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-box booked"></div>
+              <span>Sold Out</span>
+            </div>
+          </div>
+
+          <!-- Interactive Seats Grid -->
+          <div id="seatGridContainer">
+            <!-- Rows A-H injected via JS -->
+          </div>
+
+          <!-- Booking Summary Bar at Bottom (Requirement 5) -->
+          <div class="booking-summary-bar">
+            <div class="summary-details">
+              <div class="summary-seats" id="selectedSeatsDisplay">No seats selected</div>
+              <div class="summary-price" id="selectedTotalPrice">₹0.00</div>
+            </div>
+            <button class="btn btn-primary btn-lg" id="proceedToBookBtn" onclick="handleProceedClick()" disabled style="opacity: 0.5; cursor: not-allowed;">
+              Proceed to Book →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Terms and Conditions Modal - Requirement 6 -->
+  <div class="modal-overlay" id="termsModal">
+    <div class="modal-container" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">📋 Terms and Conditions</h3>
+      </div>
+      <div class="modal-body">
+        <div class="terms-content">
+          <p style="font-weight: 700; color: var(--text-main); margin-bottom: 10px;">Please read and accept the cinema booking policies before proceeding:</p>
+          <ol>
+            <li><strong>Non-Refundable Policy:</strong> Tickets once booked cannot be cancelled, exchanged, or refunded under any circumstances.</li>
+            <li><strong>Admission & Age Rating:</strong> Entry is strictly restricted by movie censorship rating ('A' rated movies require patrons to be 18+ years with valid government photo ID).</li>
+            <li><strong>Outside Food & Beverages:</strong> Outside eatables and drinks are strictly prohibited inside the theatre premises.</li>
+            <li><strong>Arrival Time:</strong> Please arrive at the cinema at least 15 minutes prior to the scheduled showtime to complete security checks.</li>
+            <li><strong>Patron Conduct:</strong> Photography, audio/video recording inside the auditorium is strictly illegal and will result in expulsion without refund.</li>
+          </ol>
+        </div>
+
+        <!-- Distinct Cancel and Accept buttons (Requirement 6) -->
+        <div class="terms-actions">
+          <button class="btn btn-outline" onclick="handleCancelTerms()">Cancel</button>
+          <button class="btn btn-primary" onclick="handleAcceptTerms()">Accept & Continue →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. User Contact Details & Payment Modal - Requirement 7 & 8 -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-container" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Checkout & Payment</h3>
+        <button class="modal-close" onclick="closeModal('checkoutModal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div id="checkoutContentArea">
+          <div class="checkout-grid">
+            
+            <!-- Left Column: User Contact Details (Requirement 7) -->
+            <div class="contact-card">
+              <h4 class="contact-card-title">👤 Contact Information</h4>
+              <div class="contact-row">
+                <span class="contact-row-label">Name:</span>
+                <span class="contact-row-val" id="checkoutName">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Registered Email:</span>
+                <span class="contact-row-val" id="checkoutEmail" style="color: var(--accent-cyan); font-size: 0.85rem;">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Registered Mobile:</span>
+                <span class="contact-row-val" id="checkoutPhone" style="color: var(--accent-green); font-weight: 700;">-</span>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 10px;">
+                ✓ Your booking confirmation and official e-ticket will be sent to this email address.
+              </p>
+
+              <!-- Order Summary Breakdown -->
+              <h4 class="contact-card-title" style="margin-top: 1.2rem;">🎟️ Ticket Summary</h4>
+              <div class="contact-row">
+                <span class="contact-row-label">Movie:</span>
+                <span class="contact-row-val" id="checkoutMovieTitle">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Theatre:</span>
+                <span class="contact-row-val" id="checkoutTheatre">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Showtime:</span>
+                <span class="contact-row-val" id="checkoutShowtime">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Selected Seats:</span>
+                <span class="contact-row-val" id="checkoutSeats" style="color: var(--accent-green); font-weight: 700;">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Ticket Total:</span>
+                <span class="contact-row-val" id="checkoutTicketTotal">-</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-row-label">Convenience Fee:</span>
+                <span class="contact-row-val" id="checkoutFee">-</span>
+              </div>
+              <div class="contact-row" style="border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 6px;">
+                <span class="contact-row-label" style="font-weight: 700; color: var(--text-main);">Total Payable:</span>
+                <span class="contact-row-val" id="checkoutGrandTotal" style="color: var(--accent-gold); font-size: 1.2rem; font-weight: 800;">-</span>
+              </div>
+            </div>
+
+            <!-- Right Column: Payment Options (Requirement 8) -->
+            <div>
+              <h4 class="contact-card-title">💳 Select Payment Mode</h4>
+              
+              <div class="payment-methods">
+                
+                <!-- 1. Google Pay (GPay) -->
+                <div class="payment-option active" id="opt_GPay" onclick="selectPaymentMethod('GPay')">
+                  <div class="payment-icon" style="color: #4285F4; font-weight: 900;">G</div>
+                  <div class="payment-details">
+                    <div class="payment-name">Google Pay (GPay)</div>
+                    <div class="payment-sub">Fast & secure UPI payment</div>
+                  </div>
+                  <input type="radio" name="paymentOptionRadio" checked />
+                </div>
+
+                <!-- 2. PhonePe -->
+                <div class="payment-option" id="opt_PhonePe" onclick="selectPaymentMethod('PhonePe')">
+                  <div class="payment-icon" style="color: #6739B7; font-weight: 900;">Pe</div>
+                  <div class="payment-details">
+                    <div class="payment-name">PhonePe</div>
+                    <div class="payment-sub">Pay directly with PhonePe UPI</div>
+                  </div>
+                  <input type="radio" name="paymentOptionRadio" />
+                </div>
+
+                <!-- 3. QR Code Payment -->
+                <div class="payment-option" id="opt_UPI_QR" onclick="selectPaymentMethod('UPI_QR')">
+                  <div class="payment-icon" style="color: var(--accent-cyan);">📲</div>
+                  <div class="payment-details">
+                    <div class="payment-name">QR Code Payment</div>
+                    <div class="payment-sub">Scan using any UPI app (Paytm, BHIM, etc.)</div>
+                  </div>
+                  <input type="radio" name="paymentOptionRadio" />
+                </div>
+
+              </div>
+
+              <!-- Dynamic QR Code Container (shown when QR selected) -->
+              <div class="qr-display-container" id="qrDisplayContainer" style="display: none;">
+                <div class="qr-code-box">
+                  <svg width="140" height="140" viewBox="0 0 100 100">
+                    <rect width="100" height="100" fill="#fff" />
+                    <path d="M5 5h35v35h-35z M10 10h25v25h-25z M18 18h9v9h-9z" fill="#0f172a"/>
+                    <path d="M60 5h35v35h-35z M65 10h25v25h-25z M73 18h9v9h-9z" fill="#0f172a"/>
+                    <path d="M5 60h35v35h-35z M10 65h25v25h-25z M18 73h9v9h-9z" fill="#0f172a"/>
+                    <circle cx="50" cy="50" r="12" fill="#e11d48"/>
+                    <path d="M46 50l3 3 6-6" stroke="#fff" stroke-width="2" fill="none"/>
+                    <rect x="46" y="10" width="8" height="15" fill="#0f172a"/>
+                    <rect x="46" y="75" width="8" height="15" fill="#0f172a"/>
+                    <rect x="65" y="55" width="25" height="8" fill="#0f172a"/>
+                    <rect x="65" y="70" width="12" height="12" fill="#0f172a"/>
+                    <rect x="82" y="82" width="10" height="10" fill="#0f172a"/>
+                  </svg>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Scan with GPay, PhonePe or Any UPI</div>
+                <div class="qr-timer" id="qrTimerDisplay">Scan & Pay within 05:00</div>
+              </div>
+
+              <div style="margin-top: 1.5rem;">
+                <button class="btn btn-primary btn-lg" style="width: 100%;" id="paySubmitBtn" onclick="processPayment()">
+                  <span id="payBtnLabel">Pay Now</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Simulated Gateway Handshake Loading (Requirement 8) -->
+        <div class="processing-overlay" id="paymentProcessingArea" style="display: none;">
+          <div class="spinner"></div>
+          <h3 style="color: var(--text-main); margin-bottom: 8px;">Processing Payment Securely</h3>
+          <p style="color: var(--text-muted); font-size: 0.92rem;">
+            Connecting to <strong id="processingMethodName" style="color: var(--accent-cyan);">Payment Gateway</strong>... Please do not refresh.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Payment Successful & E-Ticket Modal - Requirement 8 & 10 -->
+  <div class="modal-overlay" id="ticketSuccessModal">
+    <div class="modal-container" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Booking Confirmation</h3>
+        <button class="modal-close" onclick="closeModal('ticketSuccessModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="ticketModalBody">
+        <!-- Rendered dynamically via showSuccessTicket() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. My Bookings Modal -->
+  <div class="modal-overlay" id="myBookingsModal">
+    <div class="modal-container" style="max-width: 720px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🎟️ My Movie Bookings</h3>
+        <button class="modal-close" onclick="closeModal('myBookingsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="myBookingsList">
+          <!-- Populated via openMyBookings() -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
