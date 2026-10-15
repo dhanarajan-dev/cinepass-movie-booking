@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -53,6 +54,38 @@ public class UserService {
             emailService.sendLoginNotification(user);
         } catch (Exception e) {
             // Non-blocking: log and continue
+        }
+
+        return user;
+    }
+
+    public User processGoogleLogin(String email, String name) {
+        String cleanEmail = email.trim().toLowerCase();
+        Optional<User> userOpt = userRepository.findByEmail(cleanEmail);
+        User user;
+
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+            if (name != null && !name.trim().isEmpty() && (user.getName() == null || user.getName().isBlank())) {
+                user.setName(name.trim());
+                user = userRepository.save(user);
+            }
+        } else {
+            // New user registering via Google authentication
+            String randomPass = UUID.randomUUID().toString();
+            String hashedPassword = BCrypt.hashpw(randomPass, BCrypt.gensalt(10));
+            String displayName = (name != null && !name.trim().isEmpty()) 
+                    ? name.trim() 
+                    : cleanEmail.split("@")[0];
+            user = new User(displayName, cleanEmail, hashedPassword, "Google Auth");
+            user = userRepository.save(user);
+        }
+
+        // Send login notification email to user's registered Google email
+        try {
+            emailService.sendLoginNotification(user);
+        } catch (Exception e) {
+            // Non-blocking
         }
 
         return user;

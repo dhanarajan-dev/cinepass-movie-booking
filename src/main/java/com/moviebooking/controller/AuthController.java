@@ -1,6 +1,7 @@
 package com.moviebooking.controller;
 
 import com.moviebooking.dto.ApiResponse;
+import com.moviebooking.dto.GoogleAuthRequest;
 import com.moviebooking.dto.LoginRequest;
 import com.moviebooking.dto.RegisterRequest;
 import com.moviebooking.dto.UserDto;
@@ -48,6 +49,18 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error("An error occurred during login. Please try again."));
+        }
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<ApiResponse<UserDto>> googleAuth(@Valid @RequestBody GoogleAuthRequest request, HttpSession session) {
+        try {
+            User user = userService.processGoogleLogin(request.getEmail(), request.getName());
+            session.setAttribute(SESSION_USER_KEY, user);
+            return ResponseEntity.ok(ApiResponse.success("Google authentication successful! Redirecting to home...", UserDto.fromEntity(user)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Google authentication failed: " + e.getMessage()));
         }
     }
 
