@@ -7,9 +7,13 @@ import com.moviebooking.model.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import jakarta.mail.internet.MimeMessage;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,13 +38,19 @@ public class EmailService {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired(required = false)
+    private JavaMailSender mailSender;
+
     @Value("${app.mail.enabled:true}")
     private boolean mailEnabled;
 
-    @Value("${BREVO_API_KEY:}")
+    @Value("${spring.mail.username:${MAIL_USERNAME:}}")
+    private String mailUsername;
+
+    @Value("${brevo.api.key:${BREVO_API_KEY:}}")
     private String brevoApiKey;
 
-    @Value("${BREVO_FROM_EMAIL:}")
+    @Value("${brevo.from.email:${BREVO_FROM_EMAIL:}}")
     private String brevoFromEmail;
 
     // --------------------------------------------------
@@ -316,15 +326,38 @@ public class EmailService {
             return;
         }
 
-        if (brevoApiKey == null || brevoApiKey.isBlank()) {
-            logger.error("BREVO_API_KEY is missing.");
+        // 1. If Brevo API is configured (e.g. for Render cloud deployment), use HTTP API
+        if (brevoApiKey != null && !brevoApiKey.isBlank() && brevoFromEmail != null && !brevoFromEmail.isBlank()) {
+            sendViaBrevo(toEmail, subject, plainText, htmlBody);
             return;
         }
 
-        if (brevoFromEmail == null || brevoFromEmail.isBlank()) {
-            logger.error("BREVO_FROM_EMAIL is missing.");
+        // 2. Otherwise fall back to Spring JavaMailSender (for local development via Gmail SMTP)
+        if (mailSender != null) {
+            sendViaSmtp(toEmail, subject, plainText, htmlBody);
             return;
         }
+
+        logger.warn("Neither Brevo API nor Spring MailSender is configured. Email skipped for: {}", toEmail);
+    }
+
+    private void sendViaSmtp(String toEmail, String subject, String plainText, String htmlBody) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            String sender = (mailUsername != null && !mailUsername.isBlank()) ? mailUsername.trim() : "noreply@cinepass.com";
+            helper.setFrom(sender, "CinePass Movie Booking");
+            helper.setTo(toEmail);
+            helper.setSubject(subject);
+            helper.setText(plainText, htmlBody);
+            mailSender.send(message);
+            logger.info("Email notification successfully sent via Gmail SMTP to [{}]", toEmail);
+        } catch (Exception ex) {
+            logger.error("Failed to send email via SMTP to [{}]: {}", toEmail, ex.getMessage());
+        }
+    }
+
+    private void sendViaBrevo(String toEmail, String subject, String plainText, String htmlBody) {
 
         try {
             Map<String, Object> payload = Map.of(
@@ -374,8 +407,7 @@ public class EmailService {
             Thread.currentThread().interrupt();
             logger.error("Brevo email request was interrupted.");
         } catch (Exception ex) {
-            logger.error("Error sending email through Brevo: {}",
-                    ex.getMessage(), ex);
+            logger.error("Error sending email through Brevo: {}", ex.getMessage());
         }
     }
 

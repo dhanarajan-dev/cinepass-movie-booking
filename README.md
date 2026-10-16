@@ -119,12 +119,12 @@ The application strictly enforces the following end-to-end journey:
 ### 1. Database Configuration
 Ensure MySQL Server 8.0 is running on port 3306. The database settings in `src/main/resources/application.properties` are configured as:
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/movie_booking_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-spring.datasource.username=root
-spring.datasource.password=Dhanaraj@1727
+spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/movie_booking_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true}
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD}
 ```
 
-*(Note: Adjust the password in `application.properties` if you change your MySQL root password).*
+*(Note: Set the `DB_PASSWORD` environment variable for your MySQL instance).*
 
 ### 2. Start the Server
 Run the Maven wrapper from the project root:
